@@ -17,46 +17,25 @@
   <div id="root"></div>
   <script type="text/babel">
     // Initialize EmailJS with your public key
-    // TODO: Replace 'YOUR_EMAILJS_PUBLIC_KEY' with your EmailJS User ID (from EmailJS dashboard > Account > API Keys)
-    emailjs.init("YOUR_EMAILJS_PUBLIC_KEY");
+    emailjs.init("YOUR_EMAILJS_PUBLIC_KEY"); // [Placeholder: Replace with your EmailJS public key]
 
     // Main App Component
     const App = () => {
       const [isModalOpen, setIsModalOpen] = React.useState(false);
       const [formData, setFormData] = React.useState({ name: '', email: '', phone: '', message: '' });
-      const [error, setError] = React.useState('');
 
       // Handle modal toggle
-      const toggleModal = () => {
-        setIsModalOpen(!isModalOpen);
-        setError('');
-      };
+      const toggleModal = () => setIsModalOpen(!isModalOpen);
 
       // Handle input changes
       const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
-        setError('');
-      };
-
-      // Validate email format
-      const isValidEmail = (email) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
       };
 
       // Handle form submission (sends email via EmailJS)
       const handleSubmit = (e) => {
         e.preventDefault();
-        if (!formData.name || !formData.email) {
-          setError('Please fill out Name and Email fields');
-          return;
-        }
-        if (!isValidEmail(formData.email)) {
-          setError('Please enter a valid email address');
-          return;
-        }
-        // TODO: Replace 'YOUR_SERVICE_ID' and 'YOUR_TEMPLATE_ID' with your EmailJS Service ID and Template ID
         emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', {
           from_name: formData.name,
           from_email: formData.email,
@@ -71,7 +50,7 @@
             toggleModal();
           }, (error) => {
             console.error('Email sending failed:', error);
-            setError(`Failed to send request: ${error.text || 'Unknown error. Please try again.'}`);
+            alert('Sorry, there was an error sending your request. Please try again later.');
           });
       };
 
@@ -347,7 +326,6 @@
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
               <div className="bg-white p-8 rounded-lg max-w-md w-full">
                 <h2 className="text-2xl font-bold font-[Montserrat] mb-4">Contact Us</h2>
-                {error && <p className="text-red-500 mb-4">{error}</p>}
                 <div className="space-y-4">
                   <input
                     type="text"
@@ -357,7 +335,6 @@
                     placeholder="Name"
                     className="w-full p-2 border rounded-lg"
                     aria-label="Name"
-                    required
                   />
                   <input
                     type="email"
@@ -367,7 +344,6 @@
                     placeholder="Email"
                     className="w-full p-2 border rounded-lg"
                     aria-label="Email"
-                    required
                   />
                   <input
                     type="tel"
@@ -405,4 +381,44 @@
                   </div>
                 </div>
               </div>
-            </
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    // Reusable Service Card Component
+    const ServiceCard = ({ title, description, image, alt }) => (
+      <div className="bg-white shadow-lg rounded-lg overflow-hidden transition-transform transform hover:scale-105">
+        <img src={image} alt={alt} className="w-full h-48 object-cover" />
+        <div className="p-6">
+          <h3 className="text-xl font-semibold font-[Montserrat] mb-2">{title}</h3>
+          <p className="font-[Open Sans] text-gray-600">{description}</p>
+        </div>
+      </div>
+    );
+
+    // Reusable Location Card Component
+    const LocationCard = ({ title, description, image, alt }) => (
+      <div className="bg-white shadow-lg rounded-lg overflow-hidden transition-transform transform hover:scale-105">
+        <img src={image} alt={alt} className="w-full h-48 object-cover" />
+        <div className="p-6">
+          <h3 className="text-xl font-semibold font-[Montserrat] mb-2">{title}</h3>
+          <p className="font-[Open Sans] text-gray-600">{description}</p>
+        </div>
+      </div>
+    );
+
+    // Reusable Testimonial Card Component
+    const TestimonialCard = ({ quote, author, location }) => (
+      <div className="bg-white shadow-lg rounded-lg p-6">
+        <p className="font-[Open Sans] text-gray-600 italic mb-4">"{quote}"</p>
+        <p className="font-[Montserrat] font-semibold">{author}, {location}</p>
+      </div>
+    );
+
+    // Render the App
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+</html>
